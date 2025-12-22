@@ -11,7 +11,7 @@ This repo provides a practical implementation of _Hosted Workflows_ using the **
 ## 📑 Table of Contents
 - [Use-Case Scenario: Code Review](#use-case-scenario-code-review)
 - [Code Sample: YAML Definition](#code-sample-yaml-definition)
-- [Code Sample: Python Script]()
+- [Code Sample: Python Script](#code-sample-python-script)
 - [Deployment of Hosted Workflow]()
 - [Execution in Azure AI Foundry]()
 
@@ -81,30 +81,41 @@ To manage the _code review_ interactions, the workflow utilises a `ConditionGrou
 ```
 
 ## Code Sample: Python Script
-The hosted_workflow.py script acts as the deployment engine. It uses the AIProjectClient to register the agents and the workflow within your Azure project.
+The `hosted_workflow.py` script is your _deployment engine_. It utilises the `AIProjectClient` to register both the individual **agents** and the orchestration **workflow** in your Azure AI Foundry project.
 
-2.1 Registering Agents
-Agents are created as versions within the project, allowing you to define their persona and underlying model deployment once and reuse them across different workflows.
+### 2.1 Registering Agents
+Agents are created as _versions_ in the new Azure AI Foundry UI. This allows you to define their persona once and reuse then specific versions in the target agentic workflows.
 
-Python
-
-# Create Developer Agent
-developer_agent = project_client.agents.create_version(
-    agent_name="DeveloperAgent",
+``` Python
+agent = project_client.agents.create_version(
+    agent_name="<YOUR_AGENT_NAME>",
     definition=PromptAgentDefinition(
         model=model,
-        instructions="You are a junior developer practicing code writing..."
+        instructions="<YOUR_AGENT_INSTRUCTIONS>"
     ),
 )
-2.2 Registering the Workflow
-The YAML definition is uploaded to Azure AI Foundry as a WorkflowAgentDefinition. This makes the workflow "hosted," meaning it can be triggered via API calls to the project endpoint.
+```
 
-Python
+### 2.2 Registering the Workflow
+The YAML definition is uploaded to Azure AI Foundry as a `WorkflowAgentDefinition`. By registering the workflow this way, you make it "hosted" and enable it being triggered within _AI Foundry UI_ or via _API calls_ to the project endpoint.
 
+``` Python
 workflow_agent = project_client.agents.create_version(
     agent_name=workflow_definition["name"],
     definition=WorkflowAgentDefinition(workflow=workflow_yaml),
+    description=workflow_definition["description"],
 )
+```
+
+### 2.3 Client Initialisation
+To interact with Azure AI Foundry, the Python script initialises an `AIProjectClient` using your Azure AI Foundry project endpoint and `AzureCliCredential`. This client serves as the primary interface for managing agentic resources in AI Foundry.
+
+``` Python
+project_client = AIProjectClient(
+    endpoint=project_endpoint,
+    credential=AzureCliCredential()
+)
+```
 
 ## Deployment of Hosted Workflow
 To deploy the workflow to your Azure AI Foundry project, run the following command. Ensure you have authenticated via the Azure CLI (az login) first.
