@@ -1,18 +1,18 @@
 # Microsoft Agent Framework: Hosting Agentic Workflows in Azure AI Foundry
-This repo provides a practical implementation of _Hosted Workflows_ using the **Microsoft Agent Framework**'s Python SDK. Unlike local workflows, hosted workflows are deployed directly to Azure AI Foundry, allowing them to be managed, versioned and executed within the Azure ecosystem.
+This repo provides a practical implementation of _Hosted Workflows_ using the **Azure AI SDK** for Python. It utilises the **Microsoft Agent Framework** declarative schema to define multi-agent orchestration (workflow). Unlike local workflows, hosted workflows are deployed directly to Azure AI Foundry, allowing them to be managed, versioned and executed within the Azure ecosystem.
 
 > [!WARNING]
 > To successfully run these notebooks, you must have an **Azure AI Foundry** project and **AI model deployment**. Please ensure you have the following environment variables set up in your system:
-> | Environment Variable             | Description                                                                     |
-> | -------------------------------- | ------------------------------------------------------------------------------- |
-> | `AZURE_FOUNDRY_PROJECT_ENDPOINT` | The endpoint URL for your Azure AI Foundry project.                             |
-> | `AZURE_FOUNDRY_GPT_MODEL`        | The name of the model deployment to be used by the agent, e.g., _gpt-4.1-mini_. |
+> | Environment Variable             | Description                                                                            |
+> | -------------------------------- | -------------------------------------------------------------------------------------- |
+> | `AZURE_FOUNDRY_PROJECT_ENDPOINT` | The endpoint URL for your Azure AI Foundry project.                                    |
+> | `AZURE_FOUNDRY_GPT_MODEL`        | The name of the model deployment to be used by the Azure AI SDK, e.g., _gpt-4.1-mini_. |
 
 ## 📑 Table of Contents
 - [Use-Case Scenario: Code Review](#use-case-scenario-code-review)
 - [Code Sample: YAML Definition](#code-sample-yaml-definition)
 - [Code Sample: Python Script](#code-sample-python-script)
-- [Deployment of Hosted Workflow]()
+- [Deployment of Hosted Workflow](#deployment-of-hosted-workflow)
 - [Execution in Azure AI Foundry]()
 
 ## Use-Case Scenario: Code Review
@@ -118,15 +118,56 @@ project_client = AIProjectClient(
 ```
 
 ## Deployment of Hosted Workflow
-To deploy the workflow to your Azure AI Foundry project, run the following command. Ensure you have authenticated via the Azure CLI (az login) first.
+To deploy your orchestration logic to Azure, you must execute the provided Python script. 
 
-Bash
+> [!IMPORTANT]
+> Ensure you have authenticated via the Azure CLI (`az login`) before starting.
 
-# Install dependencies
-pip install azure-ai-projects azure-identity pyyaml
+### 3.1 Prerequisites
+Before running the deployment, install the necessary _Azure AI SDK_ and _Azure Identity_ libraries:
 
-# Run the deployment script
+``` Bash
+pip install azure-ai-projects --pre
+pip install azure-identity pyyaml
+```
+
+### 3.2 Running the Deployment
+The script requires the path to your _YAML_ definition file as a command-line argument. If not provided, it defaults to **CodeReview.yaml**.
+
+``` Bash
 python hosted_workflow.py CodeReview.yaml
+```
+
+### 3.3 Deployment Process
+The deployment process consists of the following few steps:
+- **Connection**: The `AIProjectClient` establishes the connection to your Azure AI Foundry project endpoint, using your _Azure CLI credentials_.
+- **Agent Creation**: The script utilises the _define_developer_agent_ and _define_reviewer_agent_ functions to create / update agent versions in the project.
+- **Workflow Registration**: The script then reads the `CodeReview.yaml` file and registers it as a `WorkflowAgentDefinition` within the AI Foundry's Workflow section.
+
+### 3.4 CLI Output
+If successful, you should see a command-line output similar to this:
+
+``` JSON
+============================================================
+Creating Hosted Workflow in Azure AI Foundry
+============================================================
+Project Endpoint: https://<YOUR_AI_FOUNDRY_ACCOUNT>.services.ai.azure.com/api/projects/<YOUR_AI_FOUNDRY_PROJECT>
+Model: gpt-4.1-mini
+
+Creating agents in Azure AI Foundry...
+Created DeveloperAgent: DeveloperAgent:1
+Created ReviewerAgent: ReviewerAgent:1
+
+Creating workflow in Azure AI Foundry...
+Loaded workflow definition from: CodeReview.yaml
+Created workflow: CodeReviewWorkflow:1
+
+============================================================
+Hosted Workflow Created Successfully!
+============================================================
+Workflow ID: CodeReviewWorkflow:1
+Agents: ['DeveloperAgent', 'ReviewerAgent']
+```
 
 ## Execution in Azure AI Foundry
 Once deployed, you can manage and visualize your agents and workflows directly in the Azure AI Foundry portal:
