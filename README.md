@@ -13,7 +13,7 @@ This repo provides a practical implementation of _Hosted Workflows_ using the **
 - [Code Sample: YAML Definition](#code-sample-yaml-definition)
 - [Code Sample: Python Script](#code-sample-python-script)
 - [Deployment of Hosted Workflow](#deployment-of-hosted-workflow)
-- [Execution in Azure AI Foundry]()
+- [Execution in Azure AI Foundry](#execution-in-azure-ai-foundry)
 
 ## Use-Case Scenario: Code Review
 This sample demonstrates a _Code Review_ workflow involving two specialised agents:
