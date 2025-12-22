@@ -170,23 +170,23 @@ Agents: ['DeveloperAgent', 'ReviewerAgent']
 ```
 
 ## Execution in Azure AI Foundry
-Once deployed, you can manage and visualize your agents and workflows directly in the Azure AI Foundry portal:
+Once the deployment is complete, you can manage and visualise your agents and workflows directly within the new Azure AI Foundry portal's UI.
 
-Agents Section: View the DeveloperAgent and ReviewerAgent, inspect their instructions, and test them individually.
+### 4.1 Agents Section
+Navigate to the _Agents_ tab to view your newly registered _DeveloperAgent_ and _ReviewerAgent_.
+- **Validation**: inspect the specific system instructions, created versions and assigned model deployments.
+- **Individual Testing**: use the new AI Foundry UI to test agent responses independently before running the full orchestration.
+![Agents_UI](images/AIFoundry_Agents_UI.png)
 
-Workflows Section: Find the CodeReviewWorkflow. You can view the YAML structure and monitor execution logs.
+### 4.2 Workflows Section
+Under the _Workflows_ tab, you will find the _CodeReviewWorkflow_.
+- **Visualizer** View: view the logic flow, incl. the loop between agents and the final conditional exit.
+- **YAML** View: review or update the uploaded declarative schema directly in the Azure AI Foundry UI.
+- **Code** View: access the code representation of your workflow in _Python_, _JavaScript_ and _C#_.
+![Workflows_UI](images/AIFoundry_Workflow_UI.png)
 
-Traceability: Each run generates a unique ConversationId, allowing you to trace the multi-turn interaction between the developer and reviewer agents.
-
-Example Execution Trace:
-Plaintext
-
-Creating agents in Azure AI Foundry...
-Created DeveloperAgent: agent_abc123
-Created ReviewerAgent: agent_xyz789
-
-Creating workflow in Azure AI Foundry...
-Created workflow: wf_987654
-
-Hosted Workflow Created Successfully!
-Workflow ID: wf_987654
+### 4.3 Traceability and Debugging
+Every workflow execution generates a unique trace, allowing granular audit of the multi-agent interaction.
+- **Transcript Analysis**: view the messages exchanged, e.g. the _ReviewerAgent_ providing code feedback and the _DeveloperAgent_ submitting revisions.
+- **Loop Monitoring**: check how many iterations occurred before the approved keyword was detected by the condition group.
+![Traces_UI](images/AIFoundry_Workflow_Traces.png)
